@@ -1,4 +1,4 @@
-
+import cv2
 import numpy as np
 import pandas as pd
 
@@ -12,5 +12,14 @@ def getColorName(R,G,B,csv):
             cname = csv.loc[i,"color_name"]
     return cname
 
+def color_detection(img_path,bbox):
+    img = cv2.imread(img_path)
+    cropped_image = img[bbox[0]:bbox[1], bbox[2]:bbox[3]]
+    colors = ('b','g','r')
+    out = []
+    for i,col in enumerate(colors):
+        histr = cv2.calcHist([cropped_image],[i],None,[256],[0,256])
+        out.append(np.where(histr == max(histr))[0])
+    return out
 
 

@@ -2,7 +2,7 @@ import argparse
 import cv2
 import pandas as pd
 from utils.visualization import draw_function
-from model.model import getColorName
+from model.model import getColorName, color_detection
 import numpy as np
 
 #Creating argument parser to take image path from command line
@@ -15,18 +15,9 @@ img_path = args['image']
 index=["color","color_name","hex","R","G","B"]
 csv = pd.read_csv('colors.csv', names=index, header=None)
 
-#Reading the image with opencv
-img = cv2.imread(img_path)
-
-
-color = ('b','g','r')
-cl = []
-for i,col in enumerate(color):
-    histr = cv2.calcHist([img],[i],None,[256],[0,256])
-    cl.append(np.where(histr == max(histr))[0])
-print(cl)
+out = color_detection(img_path,[130,160,100,400])
 
 r , g , b = 0 , 0 , 0
 #Creating text string to display( Color name and RGB values )
-text = getColorName(cl[2],cl[1],cl[0],csv) + ' R='+ str(r) +  ' G='+ str(g) +  ' B='+ str(b)
+text = getColorName(out[2],out[1],out[0],csv) + ' R='+ str(out[2]) +  ' G='+ str(out[1]) +  ' B='+ str(out[0])
 print(text)
